@@ -1,0 +1,29 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_USER: myuser
+      POSTGRES_PASSWORD: mypassword
+      POSTGRES_DB: appdb
+    volumes:
+      - data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  app:
+    build: ./
+    container_name: app
+    volumes:
+      - ./:/app
+    ports:
+      - 3000:3000
+    environment:
+      DATABASE_URL: postgres://myuser:mypassword@postgres:5432/notito_db
+    depends_on:
+      - postgres
+
+volumes:
+  data:
